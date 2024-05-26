@@ -16,11 +16,13 @@ app.use(cookieParser());
 //routes declaration
 import categoryRoute from "./routes/category.route.js";
 import productRoute from "./routes/product.route.js";
+import varaintRoute from "./routes/variant.route.js";
 /* 
   4. APPLICATION ERROR HANDLING 🚔
 */
 app.use("/api/categories", categoryRoute);
 app.use("/api/product", productRoute);
+app.use("/api/variant", varaintRoute);
 // Handle unregistered route for all HTTP Methods
 app.all("*", function (req, res, next) {
   next();

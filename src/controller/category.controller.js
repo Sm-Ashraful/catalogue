@@ -26,13 +26,6 @@ const createCategories = (categories, parentId = null) => {
 };
 
 const addCategory = async (req, res) => {
-  //get data ->req.body
-  //validate data
-  //verify if parent category exists
-  //create category object
-  //save category to database
-  //return response
-
   const { name } = req.body;
   if (!name) {
     throw new Error("Name is required");
@@ -49,15 +42,12 @@ const addCategory = async (req, res) => {
     .json({ message: "Category Created Successfully.", data: category });
 };
 
-// const getAllCategories = asyncHandler(async (req, res) => {
-//   // console.log("This is called: ", req);
-//   //get all category
-//   //return response
-//   const categories = await Category.find({}).sort({ createdAt: 1 });
-//   const categoryList = createCategories(categories);
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, "All categories", categoryList));
-// });
+const getCategories = async (req, res) => {
+  const categories = await Category.find({});
+  const categoryList = createCategories(categories);
+  return res
+    .status(200)
+    .json({ message: "All categories", data: categoryList });
+};
 
-export { addCategory };
+export { addCategory, getCategories };

@@ -2,9 +2,9 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: "dkywqtaik",
+  api_key: "633222887781138",
+  api_secret: "Jtt34akNBmJZdbwZV2zkPgbA_mw",
 });
 
 const uploadOnCloudinary = async (localFile) => {
@@ -16,6 +16,7 @@ const uploadOnCloudinary = async (localFile) => {
     fs.unlinkSync(localFile); //remove the locally file after uploaded to cloudinary
     return res;
   } catch (error) {
+    console.log("Cloudinary error: ", error);
     fs.unlinkSync(localFile); //remove the locally file if it is not uploaded to cloudinary
     return null;
   }

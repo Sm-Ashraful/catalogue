@@ -1,31 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 
-const variantSchema = new mongoose.Schema({
-  productId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  boxPerCase: {
-    type: Number,
-    required: true,
-  },
-  unitsPerBox: {
-    type: Number,
-    required: true,
-  },
-  stock: {
-    type: String,
-    required: true,
-    trim: true,
-    lowercase: true,
-  },
-});
-
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -37,7 +11,9 @@ const productSchema = new mongoose.Schema(
       unique: true,
     },
     image: {
-      type: String,
+      type: {
+        url: String,
+      },
     },
     slug: {
       type: String,
@@ -45,9 +21,6 @@ const productSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
       index: true,
-    },
-    variants: {
-      type: [variantSchema],
     },
 
     category: {

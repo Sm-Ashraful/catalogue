@@ -13,9 +13,10 @@ const createProduct = async (req, res) => {
   }
 
   // Check if user has uploaded a main image\
-  const imagePath = req.files?.image?.path;
+  const imagePath = req.files?.image[0]?.path;
+
   if (!imagePath) {
-    throw new ApiError(400, "Main image is required");
+    console.log("Main image is required");
   }
 
   const imageRes = await uploadOnCloudinary(imagePath);
@@ -30,7 +31,15 @@ const createProduct = async (req, res) => {
   });
   return res
     .status(201)
-    .json(new ApiResponse(201, "Product created successfully", product));
+    .json({ message: "Product created successfully", data: product });
 };
 
-export { createProduct };
+const getProducts = async (req, res) => {
+  const products = await Product.find({}).sort({ createdAt: -1 });
+
+  res
+    .status(201)
+    .json({ message: "Product fetched successfully", data: products });
+};
+
+export { createProduct, getProducts };

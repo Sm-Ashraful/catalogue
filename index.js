@@ -16,3 +16,7 @@ connectDB()
   .catch((err) => {
     console.log(`Mongo db connection Failed ${err.message}`);
   });
+
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
