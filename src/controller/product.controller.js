@@ -2,6 +2,7 @@ import { uploadOnCloudinary } from "../lib/cloudinary.js";
 import { customSlugify } from "../lib/customSlug.js";
 import { Category } from "../models/category.model.js";
 import { Product } from "../models/product.model.js";
+import { Variant } from "../models/variants.model.js";
 
 const createProduct = async (req, res) => {
   const { name, category } = req.body;
@@ -35,11 +36,31 @@ const createProduct = async (req, res) => {
 };
 
 const getProducts = async (req, res) => {
-  const products = await Product.find({}).sort({ createdAt: -1 });
+  try {
+    // Aggregate products with their variants
+    const products = await Product.aggregate([
+      {
+        $lookup: {
+          from: "variants",
+          localField: "_id",
+          foreignField: "product",
+          as: "variants",
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
 
-  res
-    .status(201)
-    .json({ message: "Product fetched successfully", data: products });
+    res
+      .status(200)
+      .json({ message: "Products fetched successfully", data: products });
+  } catch (error) {
+    console.log("Error: ", error);
+    res
+      .status(500)
+      .json({ message: "Error fetching products", error: error.message });
+  }
 };
 
 export { createProduct, getProducts };

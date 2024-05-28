@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import slugify from "slugify";
 import { Category } from "../models/category.model.js";
+import mongoose from "mongoose";
 
 const createCategories = (categories, parentId = null) => {
   const categoryList = [];
@@ -50,4 +51,22 @@ const getCategories = async (req, res) => {
     .json({ message: "All categories", data: categoryList });
 };
 
-export { addCategory, getCategories };
+const getCategory = async (req, res) => {
+  const { categoryId } = req.body;
+
+  // Validate categoryId
+
+  try {
+    const category = await Category.find({ _id: categoryId });
+    if (category.length === 0) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    console.log("Found category: ", category);
+    return res.status(200).json({ message: "Category found", data: category });
+  } catch (error) {
+    console.error("Error fetching category:", error.message);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export { addCategory, getCategories, getCategory };

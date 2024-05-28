@@ -11,12 +11,14 @@ app.use(cors("*"));
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(express.static("public"));
+
 app.use(cookieParser());
 
 //routes declaration
 import categoryRoute from "./routes/category.route.js";
 import productRoute from "./routes/product.route.js";
 import varaintRoute from "./routes/variant.route.js";
+import bodyParser from "body-parser";
 /* 
   4. APPLICATION ERROR HANDLING 🚔
 */

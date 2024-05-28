@@ -15,7 +15,7 @@ const createVariant = async (req, res) => {
 
   // Check if user has uploaded a main image\
   const imagePath = req.files?.image[0]?.path;
-  console.log("Image path: ", imagePath);
+
   if (!imagePath) {
     console.log("Main image is required");
   }
@@ -39,4 +39,27 @@ const createVariant = async (req, res) => {
     .json({ message: "Product created successfully", data: variant });
 };
 
-export { createVariant };
+const getVariants = async (req, res) => {
+  const { productId } = req.query;
+
+  if (!productId) {
+    return res.status(400).json({ message: "productId is required" });
+  }
+  const product = productId.toString();
+
+  // Find variants based on productId
+  const variants = await Variant.find({ product: product });
+
+  if (variants.length === 0) {
+    return res
+      .status(404)
+      .json({ message: "No variants found for the given productId" });
+  }
+
+  // Return the found variants
+  res
+    .status(200)
+    .json({ message: "Variants fetched successfully", data: variants });
+};
+
+export { createVariant, getVariants };
