@@ -2,6 +2,7 @@ import { uploadOnCloudinary } from "../lib/cloudinary.js";
 import { generateProductId } from "../lib/idGenerator.js";
 import { Product } from "../models/product.model.js";
 import { Variant } from "../models/variants.model.js";
+import { ApiError } from "../utils/ApiError.js";
 
 const createVariant = async (req, res) => {
   const { boxPerCase, unitsPerBox, product, stock, customProperties } =
@@ -17,9 +18,15 @@ const createVariant = async (req, res) => {
   const imagePath = req.files?.image[0]?.path;
 
   if (!imagePath) {
-    console.log("Main image is required");
+    throw new ApiError(400, "Image is required");
   }
-  const productId = await generateProductId();
+  let productId;
+  if (!req.body.productId) {
+    productId = await generateProductId();
+  } else {
+    productId = req.body.productId;
+  }
+
   const imageRes = await uploadOnCloudinary(imagePath);
 
   const variant = await Variant.create({
@@ -43,7 +50,7 @@ const getVariants = async (req, res) => {
   const { productId } = req.query;
 
   if (!productId) {
-    return res.status(400).json({ message: "productId is required" });
+    throw new ApiError(400, "productId is required");
   }
   const product = productId.toString();
 

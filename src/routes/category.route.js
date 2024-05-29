@@ -9,6 +9,7 @@ const router = Router();
 
 router.route("/add").post(addCategory);
 router.route("/").get(getCategories);
+
 router.route("/id").post(getCategory);
 
 export default router;

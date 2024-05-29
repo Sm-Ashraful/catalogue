@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import slugify from "slugify";
 import { Category } from "../models/category.model.js";
-import mongoose from "mongoose";
+import { ApiError } from "../utils/ApiError.js";
 
 const createCategories = (categories, parentId = null) => {
   const categoryList = [];
@@ -29,7 +29,7 @@ const createCategories = (categories, parentId = null) => {
 const addCategory = async (req, res) => {
   const { name } = req.body;
   if (!name) {
-    throw new Error("Name is required");
+    throw new ApiError(400, "Name is required");
   }
 
   const category = await Category.create({
@@ -44,28 +44,32 @@ const addCategory = async (req, res) => {
 };
 
 const getCategories = async (req, res) => {
-  const categories = await Category.find({});
-  const categoryList = createCategories(categories);
-  return res
-    .status(200)
-    .json({ message: "All categories", data: categoryList });
+  try {
+    const categories = await Category.find({});
+    const categoryList = createCategories(categories);
+    return res
+      .status(200)
+      .json({ message: "All categories", data: categoryList });
+  } catch (error) {
+    throw new ApiError(404, "Something went wrong");
+  }
 };
 
 const getCategory = async (req, res) => {
   const { categoryId } = req.body;
-
-  // Validate categoryId
+  console.log("Category id: ", categoryId);
+  const category_id = categoryId.toString();
 
   try {
-    const category = await Category.find({ _id: categoryId });
+    const category = await Category.find({ _id: category_id });
     if (category.length === 0) {
       return res.status(404).json({ message: "Category not found" });
     }
-    console.log("Found category: ", category);
+
     return res.status(200).json({ message: "Category found", data: category });
   } catch (error) {
-    console.error("Error fetching category:", error.message);
-    return res.status(500).json({ message: "Internal server error" });
+    console.log("Erorr: ", error);
+    throw new ApiError(500, "Internal server error");
   }
 };
 
