@@ -47,6 +47,21 @@ const getCategories = async (req, res) => {
   try {
     const categories = await Category.find({});
     const categoryList = createCategories(categories);
+
+    // Find the index of the specific category
+    const specificCategoryId = "6657f63b463fc6e49c7da8b4";
+    const specificCategoryIndex = categoryList.findIndex(
+      (category) => category._id === specificCategoryId
+    );
+
+    if (specificCategoryIndex) {
+      // Remove the specific category from its current position
+      const [specificCategory] = categoryList.splice(specificCategoryIndex, 1);
+
+      // Insert the specific category at the 5th index
+      categoryList.splice(4, 0, specificCategory);
+    }
+
     return res
       .status(200)
       .json({ message: "All categories", data: categoryList });
