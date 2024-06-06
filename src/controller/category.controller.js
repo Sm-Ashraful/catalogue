@@ -72,7 +72,7 @@ const getCategories = async (req, res) => {
 
 const getCategory = async (req, res) => {
   const { categoryId } = req.body;
-  console.log("Category id: ", categoryId);
+
   const category_id = categoryId.toString();
 
   try {

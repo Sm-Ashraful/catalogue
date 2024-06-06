@@ -16,7 +16,7 @@ const createVariant = async (req, res) => {
 
   // Check if user has uploaded a main image\
   const imagePath = req.files?.image[0]?.path;
-
+  console.log("Image path: ", imagePath);
   if (!imagePath) {
     throw new ApiError(400, "Image is required");
   }

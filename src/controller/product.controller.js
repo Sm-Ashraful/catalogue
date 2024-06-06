@@ -118,4 +118,25 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
-export { createProduct, getProducts, getProductsByCategory };
+const getSearchItem = async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).send({ message: "Query parameter is required" });
+  }
+
+  try {
+    const products = await Product.find({
+      name: { $regex: query, $options: "i" },
+    });
+    const categories = await Category.find({
+      name: { $regex: query, $options: "i" },
+    });
+
+    res.send({ products, categories });
+  } catch (error) {
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+};
+
+export { createProduct, getProducts, getProductsByCategory, getSearchItem };
